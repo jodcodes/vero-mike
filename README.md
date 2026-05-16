@@ -4,6 +4,20 @@ Mike is a legal document assistant with a Next.js frontend, an Express backend, 
 
 Website: [mikeoss.com](https://mikeoss.com)
 
+
+## Quick Start
+
+```bash
+git clone https://github.com/jodcodes/vero-mike.git
+cd vero-mike/backend
+npm ci
+npm run --if-present test
+cd ../frontend
+npm ci
+npm run --if-present test
+npm run --if-present build
+```
+
 ## Contents
 
 - `frontend/` - Next.js application
