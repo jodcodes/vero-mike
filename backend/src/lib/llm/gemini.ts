@@ -32,11 +32,9 @@ const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
 const MAX_GEMINI_ATTEMPTS = 3;
 
 function apiKey(override?: string | null): string {
-    const key = override?.trim() || process.env.GEMINI_API_KEY?.trim() || "";
+    const key = override?.trim() || "";
     if (!key) {
-        throw new Error(
-            "Gemini API key is not configured. Set GEMINI_API_KEY or add a user Gemini key.",
-        );
+        throw new Error("Gemini API key is not configured. Add a user Gemini key.");
     }
     return key;
 }

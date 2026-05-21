@@ -29,7 +29,7 @@ function envApiKey(provider: ApiKeyProvider): string | null {
     if (provider === "openai") {
         return process.env.OPENAI_API_KEY?.trim() || null;
     }
-    return process.env.GEMINI_API_KEY?.trim() || null;
+    return null;
 }
 
 export function hasEnvApiKey(provider: ApiKeyProvider): boolean {
