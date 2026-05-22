@@ -35,8 +35,8 @@ Keep the Supabase service-role key in `backend/.env` only:
 SUPABASE_SECRET_KEY=your-supabase-service-role-key
 ```
 
-Model-provider keys such as `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, and
-`OPENROUTER_API_KEY` should also stay in `backend/.env`.
+Model-provider keys such as `ANTHROPIC_API_KEY` and `OPENROUTER_API_KEY` should
+also stay in `backend/.env`.
 
 ## Test With Synthetic Documents
 
