@@ -4,6 +4,7 @@ import { createServerSupabase } from "../lib/supabase";
 import { downloadFile } from "../lib/storage";
 import { loadActiveVersion } from "../lib/documentVersions";
 import { normalizeDocxZipPaths } from "../lib/convert";
+import { resolveTabularProjectRebind } from "../lib/tabularProjectRebinding";
 import {
     runLLMStream,
     TABULAR_TOOLS,
@@ -457,8 +458,6 @@ tabularRouter.patch("/:reviewId", requireAuth, async (req, res) => {
     if (req.body.title != null) updates.title = req.body.title;
     if (req.body.columns_config != null)
         updates.columns_config = req.body.columns_config;
-    if (req.body.project_id !== undefined)
-        updates.project_id = req.body.project_id;
     // shared_with edits are owner-only — gated below after we know who's
     // making the call. Normalize lowercase + dedupe + drop empties.
     let sharedWithUpdate: string[] | undefined;
@@ -492,6 +491,26 @@ tabularRouter.patch("/:reviewId", requireAuth, async (req, res) => {
     );
     if (!access.ok)
         return void res.status(404).json({ detail: "Review not found" });
+    if (req.body.project_id !== undefined) {
+        const projectRebind = await resolveTabularProjectRebind(
+            req.body.project_id,
+            async (nextProjectId) => {
+                const projectAccess = await checkProjectAccess(
+                    nextProjectId,
+                    userId,
+                    userEmail,
+                    db,
+                );
+                return projectAccess.ok;
+            },
+        );
+        if (!projectRebind.ok) {
+            return void res
+                .status(projectRebind.status)
+                .json({ detail: projectRebind.detail });
+        }
+        updates.project_id = projectRebind.projectId;
+    }
     if (sharedWithUpdate !== undefined) {
         if (!access.isOwner)
             return void res
